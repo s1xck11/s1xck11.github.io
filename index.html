@@ -5,8 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B0F14">
 <meta name="color-scheme" content="dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="s1xck store">
 <title>s1xck store — сборки и релизы</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon.svg">
 <style>
 :root{
   --bg:#0B0F14; --card:#131A23; --card2:#182230; --line:#263243;
@@ -47,6 +53,7 @@ a{color:var(--link)}
 .btn-sec:hover{background:#1E2A3A}
 .btn:disabled{opacity:.45;pointer-events:none}
 .btn.wide{width:100%}
+.install{margin-top:16px}
 .icon-btn{display:inline-flex;align-items:center;justify-content:center;flex:none;
   width:48px;height:48px;border-radius:12px;border:1px solid var(--line);
   background:var(--card2);color:var(--text);cursor:pointer;text-decoration:none;
@@ -163,6 +170,10 @@ a{color:var(--link)}
 
 <main class="wrap">
   <div id="banner" class="banner" hidden></div>
+  <button id="installBtn" class="btn btn-pri wide install" type="button" hidden>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+    Установить приложение
+  </button>
   <div class="toolbar">
     <input id="search" type="search" placeholder="Поиск по приложениям…" aria-label="Поиск по приложениям">
     <button id="forksBtn" class="chip" type="button" aria-pressed="false">Форки</button>
@@ -174,7 +185,8 @@ a{color:var(--link)}
 </main>
 
 <footer class="wrap foot">
-  <p>Данные: GitHub API · 60 запросов/час на IP · кэш 15 минут.</p>
+  <p>Приложение: кнопка «Установить» сверху или Chrome → меню ⋮ → «Установить приложение». Работает только на https-версии сайта.</p>
+  <p>Данные: GitHub API · 60 запросов/час на IP · кэш 15 минут. Офлайн показываются сохранённые данные.</p>
   <p>Артефакты качаются без логина через <a href="https://nightly.link/" target="_blank" rel="noopener">nightly.link</a>. Протухшие сборки (90 дней) помечаются.</p>
   <p>Профиль: <a href="https://github.com/s1xck11" target="_blank" rel="noopener">github.com/s1xck11</a></p>
 </footer>
@@ -193,6 +205,7 @@ var bannerEl=document.getElementById('banner');
 var searchEl=document.getElementById('search');
 var refreshBtn=document.getElementById('refresh');
 var forksBtn=document.getElementById('forksBtn');
+var installBtn=document.getElementById('installBtn');
 
 var DL='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg>';
 var EXT='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
@@ -287,7 +300,14 @@ function load(force){
     var bad=state.repos.some(function(r){var d=state.data[r.name];return !d||d.rel===null||d.art===null});
     if(bad)showBanner('Часть данных не загрузилась — возможно, лимит API. В карточках есть кнопка «Повторить».');
   }).catch(function(err){
-    if(err&&err.rate){rateBanner(err)}
+    var stale=null;
+    try{stale=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+    if(!state.repos.length&&stale&&stale.repos&&stale.repos.length){
+      state.repos=stale.repos;state.data=stale.data||{};state.ts=stale.ts;state.cached=true;
+      showBanner((err&&err.rate?'Лимит GitHub API':'Нет сети или GitHub недоступен')+
+        ' — показываю сохранённые данные от '+dtShort(stale.ts)+'.');
+    }
+    else if(err&&err.rate){rateBanner(err)}
     else if(state.repos.length){showBanner('Не удалось обновить данные'+(state.ts?' — показываю кэш.':'.'))}
     else{cardsEl.innerHTML='<div class="card"><div class="panel"><div class="empty">'+
       '<p class="err">Не получилось загрузить данные с GitHub. Проверь интернет.</p>'+
@@ -462,6 +482,34 @@ forksBtn.addEventListener('click',function(){
   render();
 });
 searchEl.addEventListener('input',render);
+
+/* ---------- PWA: установка ---------- */
+var deferredPrompt=null;
+var standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();
+  if(standalone)return;
+  deferredPrompt=e;
+  installBtn.hidden=false;
+});
+installBtn.addEventListener('click',function(){
+  if(!deferredPrompt)return;
+  installBtn.disabled=true;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(){
+    deferredPrompt=null;installBtn.hidden=true;installBtn.disabled=false;
+  }).catch(function(){installBtn.disabled=false});
+});
+window.addEventListener('appinstalled',function(){
+  deferredPrompt=null;installBtn.hidden=true;standalone=true;
+});
+
+/* ---------- PWA: сервис-воркер ---------- */
+if('serviceWorker' in navigator && location.protocol==='https:'){
+  var reg=function(){navigator.serviceWorker.register('./sw.js').catch(function(){})};
+  if(document.readyState==='complete')reg();
+  else window.addEventListener('load',reg);
+}
 
 load(false);
 })();
