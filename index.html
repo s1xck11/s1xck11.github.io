@@ -17,9 +17,9 @@
 :root{
   --bg:#0B0F14; --card:#131A23; --card2:#182230; --line:#263243;
   --text:#E9EFF6; --muted:#A3B3C7;
-  --accent:#43D17C; --accent-ink:#06210F;
+  --accent:#43D17C; --accent-ink:#06210F; --teal:#2DD4BF;
   --link:#6FB7FF; --amber:#F5C044; --amber-ink:#241A02; --red:#FF8A8A;
-  --r:14px;
+  --r:14px; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -33,7 +33,7 @@ a{color:var(--link)}
 /* ---------- header ---------- */
 .top{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.88);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.top-in{display:flex;align-items:center;gap:8px;padding:8px 16px}
+.top-in{display:flex;align-items:center;gap:8px;padding:8px 16px;max-width:880px;margin:0 auto}
 .ava{width:40px;height:40px;border-radius:12px;flex:none;border:1px solid var(--line)}
 .brand{flex:1;min-width:0}
 .brand h1{margin:0;font-size:20px;line-height:1.2}
@@ -53,6 +53,7 @@ a{color:var(--link)}
 .btn-sec:hover{background:#1E2A3A}
 .btn:disabled{opacity:.45;pointer-events:none}
 .btn.wide{width:100%}
+.btn.big{min-height:54px;font-size:16px;border-radius:14px}
 .install{margin-top:16px}
 .icon-btn{display:inline-flex;align-items:center;justify-content:center;flex:none;
   width:48px;height:48px;border-radius:12px;border:1px solid var(--line);
@@ -79,44 +80,58 @@ a{color:var(--link)}
 .banner{margin:16px 0 0;padding:12px 16px;border-radius:12px;font-size:14px;
   background:#2A2210;border:1px solid #6B5A1E;color:#F5D98A}
 
-/* ---------- cards ---------- */
-.cards{display:grid;gap:16px;grid-template-columns:1fr;align-items:start;margin-top:16px}
-@media(min-width:760px){.cards{grid-template-columns:1fr 1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-.card-head{display:flex;gap:8px;align-items:center;padding:8px 16px 0}
-.logo{width:40px;height:40px;border-radius:12px;flex:none;display:flex;align-items:center;
-  justify-content:center;font-weight:800;font-size:20px;border:1px solid var(--line)}
-.grow{flex:1;min-width:0}
-.head-link{display:flex;flex-direction:column;justify-content:center;min-height:48px;
-  padding:8px 0;text-decoration:none;color:var(--text)}
-.head-link:hover .repo-name{text-decoration:underline}
-.repo-name{font-size:17px;font-weight:700;display:inline-flex;align-items:center;gap:8px}
-.meta{color:var(--muted);font-size:13px}
-.desc{margin:0;padding:0 16px 8px;color:var(--muted);font-size:14px}
+/* ---------- tiles (витрина) ---------- */
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));margin-top:16px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 12px 14px;
+  text-decoration:none;color:var(--text);-webkit-tap-highlight-color:transparent;
+  transition:transform .08s,border-color .2s,background .2s}
+.tile:active{transform:scale(.965);background:var(--card2)}
+.tile:hover{border-color:#33445A}
+.ticon{width:72px;height:72px;border-radius:20px;display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:800;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.4);position:relative;overflow:hidden;flex:none}
+.ticon::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 60% at 20% 0%, rgba(255,255,255,.28), transparent 55%)}
+.tname{font-weight:700;font-size:15px;margin-top:4px;word-break:break-word}
+.ttag{font-size:12px;color:var(--muted);min-height:2.6em;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tmeta{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+.ldot{width:9px;height:9px;border-radius:999px;display:inline-block}
+.tver{font-family:var(--mono);font-size:11px;font-weight:700;color:#7CE3A6;
+  background:#12351F;padding:2px 8px;border-radius:999px}
+
+/* ---------- badges / misc ---------- */
 .badge{display:inline-flex;align-items:center;font-size:12px;font-weight:700;
   padding:2px 8px;border-radius:999px;white-space:nowrap}
 .b-green{background:#12351F;color:#7CE3A6}
 .b-amber{background:var(--amber);color:var(--amber-ink)}
 .b-dim{background:#223043;color:var(--muted)}
-.b-blue{background:#10263B;color:#8FC7FF}
 
-/* ---------- tabs ---------- */
-.tabs{display:flex;gap:8px;padding:0 16px}
-.tab{flex:1;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  border-radius:12px;border:1px solid transparent;background:transparent;color:var(--muted);
-  font:600 15px inherit;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:background .15s,color .15s}
-.tab:active{filter:brightness(.82)}
-.tab[aria-selected="true"]{background:var(--card2);border-color:var(--line);color:var(--text)}
-.cnt{background:#223043;color:var(--muted);font-size:12px;font-weight:700;
-  padding:1px 8px;border-radius:999px}
-.panel{padding:16px;display:flex;flex-direction:column;gap:8px}
-.note{margin:0;font-size:13px;color:var(--muted)}
+/* ---------- detail page ---------- */
+.d-top{display:flex;align-items:center;gap:8px;margin-top:16px}
+.d-top h2{margin:0;font-size:17px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.d-head{display:flex;gap:14px;align-items:center;margin-top:14px}
+.d-icon{width:84px;height:84px;border-radius:22px;display:flex;align-items:center;justify-content:center;
+  font-size:36px;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4);position:relative;overflow:hidden;flex:none}
+.d-icon::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 60% at 20% 0%, rgba(255,255,255,.28), transparent 55%)}
+.d-info{flex:1;min-width:0}
+.d-info h2{margin:0;font-size:22px;line-height:1.25;word-break:break-word}
+.d-desc{margin:4px 0 0;color:var(--muted);font-size:14px}
+.d-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:13px;color:var(--muted)}
+.d-cta{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.cta-row{display:flex;gap:8px;flex-wrap:wrap}
+.cta-row .btn{flex:1;min-width:140px}
+.d-sec{margin-top:24px}
+.d-sec>h3{margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.d-block{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;
+  display:flex;flex-direction:column;gap:8px}
 
-/* ---------- rows ---------- */
+/* ---------- rows (releases/artifacts) ---------- */
 .rel{display:flex;flex-direction:column;gap:8px}
 .rel-head{display:flex;align-items:center;gap:8px}
 .rel-name{font-weight:700;font-size:16px;word-break:break-word}
+.meta{color:var(--muted);font-size:13px}
 .row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;
   padding:8px;background:var(--card2);border:1px solid var(--line);border-radius:12px}
 .row.dim{opacity:.6}
@@ -137,13 +152,34 @@ a{color:var(--link)}
 .older summary::after{content:"▾";margin-left:auto;transition:transform .15s}
 .older[open] summary::after{transform:rotate(180deg)}
 .older .rel{border-top:1px dashed var(--line);padding-top:12px}
-.empty{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:8px 0}
+.empty{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:4px 0}
 .empty p{margin:0;color:var(--muted)}
+.note{margin:0;font-size:13px;color:var(--muted)}
 .err{color:var(--red)!important}
 
-/* ---------- skeleton / misc ---------- */
-.sk-line{height:16px;border-radius:8px;margin:16px}
-.sk-btn{height:48px;border-radius:12px;margin:8px 16px 16px}
+/* ---------- readme ---------- */
+.readme{font-size:15px;line-height:1.65;word-wrap:break-word}
+.readme>:first-child{margin-top:0}
+.readme h1,.readme h2{border-bottom:1px solid var(--line);padding-bottom:6px;margin:18px 0 10px;font-size:18px}
+.readme h3{margin:16px 0 8px;font-size:16px}
+.readme h4{margin:12px 0 6px;font-size:14px}
+.readme p{margin:8px 0}
+.readme img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+.readme pre{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px;
+  overflow-x:auto;font-size:13px;line-height:1.5}
+.readme code{font-family:var(--mono);font-size:.88em;background:var(--card2);padding:1px 6px;border-radius:6px}
+.readme pre code{background:none;padding:0}
+.readme blockquote{margin:8px 0;padding:6px 12px;border-left:3px solid var(--teal);color:var(--muted)}
+.readme ul,.readme ol{padding-left:22px;margin:8px 0}
+.readme li{margin:4px 0}
+.readme table{border-collapse:collapse;max-width:100%;display:block;overflow-x:auto}
+.readme th,.readme td{border:1px solid var(--line);padding:6px 10px;font-size:13px;text-align:left}
+.readme hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+.rm-load{height:14px;border-radius:7px;margin:10px 0}
+
+/* ---------- skeleton ---------- */
+.tile.sk{pointer-events:none}
+.sk-line{height:12px;border-radius:6px;margin:6px auto}
 .shimmer{background:linear-gradient(90deg,#182230 25%,#212D3E 50%,#182230 75%);
   background-size:200% 100%;animation:sh 1.2s infinite}
 @keyframes sh{to{background-position:-200% 0}}
@@ -156,7 +192,7 @@ a{color:var(--link)}
 <body>
 
 <header class="top">
-  <div class="wrap top-in">
+  <div class="top-in">
     <img class="ava" src="https://avatars.githubusercontent.com/u/327859942?v=4&s=80" alt="" width="40" height="40">
     <div class="brand">
       <h1>s1xck <span>store</span></h1>
@@ -174,13 +210,12 @@ a{color:var(--link)}
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
     Установить приложение
   </button>
-  <div class="toolbar">
-    <input id="search" type="search" placeholder="Поиск по приложениям…" aria-label="Поиск по приложениям">
+  <div class="toolbar" id="toolbar">
+    <input id="search" type="search" placeholder="Поиск приложений…" aria-label="Поиск приложений">
     <button id="forksBtn" class="chip" type="button" aria-pressed="false">Форки</button>
   </div>
-  <section id="cards" class="cards" aria-busy="true" aria-label="Приложения"></section>
-  <p class="hint">Как ставить: скачай APK → открой файл → разреши установку из этого источника.
-  В ZIP из вкладки «Сборки» лежит APK — распакуй архив и поставь.</p>
+  <section id="view" aria-busy="true" aria-label="Приложения"></section>
+  <p class="hint">Тапни по приложению — откроется его страница: описание из README, релизы и свежие сборки.</p>
   <noscript><p class="err">Нужен включённый JavaScript — стор тянет данные с GitHub API.</p></noscript>
 </main>
 
@@ -197,21 +232,35 @@ a{color:var(--link)}
 var USER='s1xck11';
 var API='https://api.github.com';
 var KEY='s1xck-store-v1';
+var RMKEY='s1xck-readme-v1';
 var TTL=15*60*1000;
+var SKIP_REPOS=['s1xck11.github.io']; // репо самого стора — не приложение
 
-var cardsEl=document.getElementById('cards');
+var viewEl=document.getElementById('view');
 var statusEl=document.getElementById('status');
 var bannerEl=document.getElementById('banner');
 var searchEl=document.getElementById('search');
 var refreshBtn=document.getElementById('refresh');
 var forksBtn=document.getElementById('forksBtn');
 var installBtn=document.getElementById('installBtn');
+var toolbarEl=document.getElementById('toolbar');
 
 var DL='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg>';
 var EXT='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+var BACK='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>';
 var LANG={Dart:'#00B4AB',Kotlin:'#A97BFF',Java:'#B07219'};
+var GRADS=[
+  'linear-gradient(135deg,#12482A,#43D17C)',
+  'linear-gradient(135deg,#0B3A4A,#2DD4BF)',
+  'linear-gradient(135deg,#2A1E4F,#A97BFF)',
+  'linear-gradient(135deg,#4A2A12,#F5A044)',
+  'linear-gradient(135deg,#123A5C,#6FB7FF)',
+  'linear-gradient(135deg,#4A1230,#F472B6)'
+];
 
 var state={repos:[],data:{},showForks:false,ts:0,cached:false,loading:false,rateLeft:null};
+var readmeCache={};
+try{readmeCache=JSON.parse(localStorage.getItem(RMKEY))||{}}catch(e){}
 
 /* ---------- helpers ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
@@ -230,8 +279,10 @@ function ago(iso){var s=Math.floor((Date.now()-new Date(iso).getTime())/1000);
   if(d===1)return 'вчера';
   if(d<30)return d+' дн назад';
   return dtShort(iso)}
+function grad(name){var h=0;for(var i=0;i<name.length;i++)h=(h*31+name.charCodeAt(i))>>>0;return GRADS[h%GRADS.length]}
 function showBanner(t){bannerEl.textContent=t;bannerEl.hidden=false}
 function hideBanner(){bannerEl.hidden=true}
+function currentApp(){var m=location.hash.match(/^#\/app\/(.+)$/);return m?decodeURIComponent(m[1]):null}
 
 /* ---------- api ---------- */
 function fetchJSON(url){
@@ -272,6 +323,7 @@ function fetchRepoData(r){
 function saveCache(){
   try{localStorage.setItem(KEY,JSON.stringify({ts:state.ts||Date.now(),repos:state.repos,data:state.data}))}catch(e){}
 }
+function saveReadme(){try{localStorage.setItem(RMKEY,JSON.stringify(readmeCache))}catch(e){}}
 
 /* ---------- load ---------- */
 function load(force){
@@ -281,24 +333,26 @@ function load(force){
       var c=JSON.parse(localStorage.getItem(KEY));
       if(c&&c.ts&&Date.now()-c.ts<TTL&&c.repos&&c.repos.length){
         state.repos=c.repos;state.data=c.data;state.ts=c.ts;state.cached=true;
-        cardsEl.setAttribute('aria-busy','false');render();setStatus();return;
+        viewEl.setAttribute('aria-busy','false');route();setStatus();return;
       }
     }catch(e){}
   }
   state.loading=true;refreshBtn.disabled=true;refreshBtn.classList.add('spin');
-  cardsEl.setAttribute('aria-busy','true');
-  if(!state.repos.length)cardsEl.innerHTML=skeletons();
+  viewEl.setAttribute('aria-busy','true');
+  if(!state.repos.length)viewEl.innerHTML=skeletons();
   statusEl.textContent='Обновляю данные с GitHub…';
   fetchJSON(API+'/users/'+USER+'/repos?per_page=100&sort=pushed').then(function(repos){
-    state.repos=repos.map(function(r){return {
-      name:r.name,desc:r.description,lang:r.language,fork:r.fork,
-      stars:r.stargazers_count,pushed:r.pushed_at,url:r.html_url
-    }});
+    state.repos=repos
+      .filter(function(r){return SKIP_REPOS.indexOf(r.name)<0})
+      .map(function(r){return {
+        name:r.name,desc:r.description,lang:r.language,fork:r.fork,
+        stars:r.stargazers_count,pushed:r.pushed_at,url:r.html_url,branch:r.default_branch||'main'
+      }});
     return Promise.all(state.repos.map(fetchRepoData));
   }).then(function(){
     state.ts=Date.now();state.cached=false;saveCache();hideBanner();
     var bad=state.repos.some(function(r){var d=state.data[r.name];return !d||d.rel===null||d.art===null});
-    if(bad)showBanner('Часть данных не загрузилась — возможно, лимит API. В карточках есть кнопка «Повторить».');
+    if(bad)showBanner('Часть данных не загрузилась — возможно, лимит API. На странице приложения есть кнопка «Повторить».');
   }).catch(function(err){
     var stale=null;
     try{stale=JSON.parse(localStorage.getItem(KEY))}catch(e){}
@@ -309,12 +363,12 @@ function load(force){
     }
     else if(err&&err.rate){rateBanner(err)}
     else if(state.repos.length){showBanner('Не удалось обновить данные'+(state.ts?' — показываю кэш.':'.'))}
-    else{cardsEl.innerHTML='<div class="card"><div class="panel"><div class="empty">'+
+    else{viewEl.innerHTML='<div class="d-block"><div class="empty">'+
       '<p class="err">Не получилось загрузить данные с GitHub. Проверь интернет.</p>'+
-      '<button class="btn btn-sec" type="button" data-reload>Повторить</button></div></div></div>'}
+      '<button class="btn btn-sec" type="button" data-reload>Повторить</button></div></div>'}
   }).then(function(){
     state.loading=false;refreshBtn.disabled=false;refreshBtn.classList.remove('spin');
-    cardsEl.setAttribute('aria-busy','false');render();setStatus();
+    viewEl.setAttribute('aria-busy','false');route();setStatus();
   });
 }
 function retryRepo(name){
@@ -323,7 +377,7 @@ function retryRepo(name){
   for(var i=0;i<state.repos.length;i++)if(state.repos[i].name===name)r=state.repos[i];
   if(!r)return;
   statusEl.textContent='Повторяю загрузку '+name+'…';
-  fetchRepoData(r).then(function(){saveCache();render();setStatus()});
+  fetchRepoData(r).then(function(){saveCache();route();setStatus()});
 }
 function setStatus(){
   var forks=state.repos.filter(function(r){return r.fork}).length;
@@ -332,73 +386,128 @@ function setStatus(){
   statusEl.textContent=(state.cached?'Кэш · ':'Обновлено · ')+dtShort(state.ts)+
     (state.rateLeft!==null?' · API '+state.rateLeft+'/60':'');
 }
-
-/* ---------- render ---------- */
 function skeletons(){
-  var one='<div class="card" aria-hidden="true"><div class="sk-line shimmer" style="width:45%"></div>'+
-    '<div class="sk-line shimmer" style="width:70%"></div>'+
-    '<div class="sk-btn shimmer"></div><div class="sk-btn shimmer"></div></div>';
-  return one+one+one;
+  var t='<div class="tile sk"><div class="ticon shimmer"></div>'+
+    '<div class="sk-line shimmer" style="width:60%"></div>'+
+    '<div class="sk-line shimmer" style="width:85%"></div></div>';
+  return '<div class="tiles">'+t+t+t+t+'</div>';
 }
-function render(){
-  if(!state.repos.length)return;
+
+/* ---------- роутер ---------- */
+function route(){
+  var app=currentApp();
+  var isDetail=!!app;
+  toolbarEl.hidden=isDetail;
+  installBtn.hidden=isDetail||installBtn.hidden===false&&false;
+  installBtn.hidden=isDetail||!installReady;
+  if(app)renderDetail(app);else renderHome();
+  window.scrollTo(0,0);
+  document.title=app?(app+' · s1xck store'):'s1xck store — сборки и релизы';
+}
+
+/* ---------- витрина ---------- */
+function visibleRepos(){
   var q=searchEl.value.trim().toLowerCase();
-  var list=state.repos.filter(function(r){
+  return state.repos.filter(function(r){
     if(r.fork&&!state.showForks)return false;
     if(q&&(r.name+' '+(r.desc||'')).toLowerCase().indexOf(q)<0)return false;
     return true;
   });
+}
+function renderHome(){
+  if(!state.repos.length)return; // скелетон или ошибка уже стоят
+  var list=visibleRepos();
   if(!list.length){
-    cardsEl.innerHTML='<div class="card"><div class="panel"><p class="note">Ничего не нашлось. Сбрось поиск или включи «Форки».</p></div></div>';
+    viewEl.innerHTML='<div class="d-block"><p class="note">Ничего не нашлось. Сбрось поиск или включи «Форки».</p></div>';
     return;
   }
-  cardsEl.innerHTML=list.map(cardHTML).join('');
+  viewEl.innerHTML='<div class="tiles">'+list.map(tileHTML).join('')+'</div>';
 }
-function cardHTML(r){
+function tileHTML(r){
   var d=state.data[r.name]||{};
-  var rel=d.rel,art=d.art;
-  var relN=rel?rel.length:0,artN=art?art.length:0;
-  var tab=relN>0?'rel':'art';
-  var color=LANG[r.lang]||'#8FA1B7';
-  var meta=(r.lang?esc(r.lang)+' · ':'')+'★ '+r.stars+' · '+ago(r.pushed);
-  var h='<article class="card">';
-  h+='<div class="card-head">'+
-     '<div class="logo" style="color:'+color+';background:'+color+'1A;border-color:'+color+'55" aria-hidden="true">'+esc(r.name.charAt(0).toUpperCase())+'</div>'+
-     '<a class="head-link grow" href="'+esc(r.url)+'" target="_blank" rel="noopener">'+
-     '<span class="repo-name">'+esc(r.name)+(r.fork?' <span class="badge b-dim">fork</span>':'')+'</span>'+
-     '<span class="meta" title="'+esc(dt(r.pushed))+'">'+meta+'</span></a></div>';
-  if(r.desc)h+='<p class="desc">'+esc(r.desc)+'</p>';
-  h+='<div class="tabs" role="tablist" aria-label="Разделы '+esc(r.name)+'">'+
-     tabBtn(r,'rel','Релизы',rel?relN:'—',tab==='rel')+
-     tabBtn(r,'art','Сборки',art?artN:'—',tab==='art')+'</div>';
-  h+='<div class="panel" id="p-rel-'+esc(r.name)+'" role="tabpanel" aria-labelledby="t-rel-'+esc(r.name)+'"'+(tab==='rel'?'':' hidden')+'>'+relPanel(r,rel)+'</div>';
-  h+='<div class="panel" id="p-art-'+esc(r.name)+'" role="tabpanel" aria-labelledby="t-art-'+esc(r.name)+'"'+(tab==='art'?'':' hidden')+'>'+artPanel(r,art)+'</div>';
-  h+='</article>';
-  return h;
+  var rel=(d.rel&&d.rel.length)?d.rel[0]:null;
+  var ver=rel?rel.tag:((d.art&&d.art.length)?'nightly':'');
+  var lc=LANG[r.lang]||'#8FA1B7';
+  return '<a class="tile" href="#/app/'+encodeURIComponent(r.name)+'">'+
+    '<span class="ticon" style="background:'+grad(r.name)+'">'+esc(r.name.charAt(0).toUpperCase())+'</span>'+
+    '<span class="tname">'+esc(r.name)+'</span>'+
+    '<span class="ttag">'+(r.desc?esc(r.desc):'&nbsp;')+'</span>'+
+    '<span class="tmeta"><span class="ldot" style="background:'+lc+'"></span>'+esc(r.lang||'—')+
+    (ver?'<span class="tver">'+esc(ver)+'</span>':'')+'</span></a>';
 }
-function tabBtn(r,kind,label,cnt,active){
-  return '<button class="tab" type="button" role="tab" id="t-'+kind+'-'+esc(r.name)+'"'+
-    ' aria-selected="'+(active?'true':'false')+'" aria-controls="p-'+kind+'-'+esc(r.name)+'"'+
-    ' data-tab="'+kind+'" data-repo="'+esc(r.name)+'">'+label+' <span class="cnt">'+cnt+'</span></button>';
+
+/* ---------- страница приложения ---------- */
+function findRepo(name){
+  for(var i=0;i<state.repos.length;i++)if(state.repos[i].name===name)return state.repos[i];
+  return null;
+}
+function renderDetail(name){
+  if(!state.repos.length){
+    viewEl.innerHTML='<div class="d-block"><p class="note">Загружаю данные…</p></div>';
+    return;
+  }
+  var r=findRepo(name);
+  if(!r){
+    viewEl.innerHTML='<div class="d-top"><button class="icon-btn" type="button" data-back aria-label="Назад">'+BACK+'</button>'+
+      '<h2>Не нашлось</h2></div><div class="d-block"><p class="note">Такого приложения в сторе нет — возможно, репо переименовали.</p></div>';
+    return;
+  }
+  var d=state.data[r.name]||{};
+  var lc=LANG[r.lang]||'#8FA1B7';
+  var h='<div class="d-top"><button class="icon-btn" type="button" data-back aria-label="Назад к списку">'+BACK+'</button>'+
+    '<h2>Страница приложения</h2></div>';
+  h+='<div class="d-head"><span class="d-icon" style="background:'+grad(r.name)+'">'+esc(r.name.charAt(0).toUpperCase())+'</span>'+
+    '<div class="d-info"><h2>'+esc(r.name)+(r.fork?' <span class="badge b-dim">fork</span>':'')+'</h2>'+
+    (r.desc?'<p class="d-desc">'+esc(r.desc)+'</p>':'')+
+    '<div class="d-meta"><span class="ldot" style="background:'+lc+'"></span>'+esc(r.lang||'—')+
+    '<span>★ '+r.stars+'</span><span title="'+esc(dt(r.pushed))+'">обновлён '+ago(r.pushed)+'</span></div></div></div>';
+  h+='<div class="d-cta">'+mainCta(r,d)+
+    '<div class="cta-row"><a class="btn btn-sec" href="'+esc(r.url)+'" target="_blank" rel="noopener">Репозиторий '+EXT+'</a>'+
+    '<a class="btn btn-sec" href="'+esc(r.url)+'/releases" target="_blank" rel="noopener">Releases '+EXT+'</a>'+
+    '<a class="btn btn-sec" href="'+esc(r.url)+'/actions" target="_blank" rel="noopener">Actions '+EXT+'</a></div></div>';
+  h+='<section class="d-sec"><h3>Об этом приложении</h3><div class="d-block"><div id="readmeBox">'+readmeHTML(r)+'</div></div></section>';
+  h+='<section class="d-sec"><h3>Релизы</h3><div class="d-block">'+relSection(r,d.rel)+'</div></section>';
+  h+='<section class="d-sec"><h3>Сборки из Actions</h3><div class="d-block">'+artSection(r,d.art)+'</div></section>';
+  viewEl.innerHTML=h;
+  if(readmeCache[r.name]===undefined)fetchReadme(r);
+}
+function mainCta(r,d){
+  var rel=(d.rel&&d.rel.length)?d.rel[0]:null;
+  if(rel&&rel.assets.length){
+    var pick=null,i;
+    for(i=0;i<rel.assets.length;i++)if(/\.apk$/i.test(rel.assets[i].name)&&/arm64-v8a/i.test(rel.assets[i].name)){pick=rel.assets[i];break}
+    if(!pick)for(i=0;i<rel.assets.length;i++)if(/\.apk$/i.test(rel.assets[i].name)){pick=rel.assets[i];break}
+    if(!pick)pick=rel.assets[0];
+    var kind=/\.apk$/i.test(pick.name)?'APK':'файл';
+    return '<a class="btn btn-pri wide big" href="'+esc(pick.url)+'">'+DL+'Скачать '+kind+' ('+esc(rel.tag)+') · '+mb(pick.size)+'</a>';
+  }
+  var art=null;
+  if(d.art)for(var j=0;j<d.art.length;j++)if(!d.art[j].expired){art=d.art[j];break}
+  if(art&&art.run){
+    return '<a class="btn btn-pri wide big" href="'+nightly(r,art)+'">'+DL+'Скачать свежую сборку · '+mb(art.size)+'</a>';
+  }
+  return '<a class="btn btn-sec wide big" href="'+esc(r.url)+'" target="_blank" rel="noopener">Открыть репозиторий '+EXT+'</a>';
+}
+function nightly(r,a){
+  return 'https://nightly.link/'+USER+'/'+encodeURIComponent(r.name)+'/actions/runs/'+a.run+'/'+encodeURIComponent(a.name)+'.zip';
 }
 function errBlock(name){
   return '<div class="empty"><p class="err">Не загрузилось (возможно, лимит API).</p>'+
     '<button class="btn btn-sec" type="button" data-retry="'+esc(name)+'">Повторить</button></div>';
 }
-function relPanel(r,rel){
+function relSection(r,rel){
   if(rel==null)return errBlock(r.name);
   if(!rel.length)return '<div class="empty"><p>Релизов пока нет.</p>'+
-    '<a class="btn btn-sec" href="https://github.com/'+USER+'/'+esc(r.name)+'/releases" target="_blank" rel="noopener">Открыть Releases '+EXT+'</a></div>';
+    '<a class="btn btn-sec" href="'+esc(r.url)+'/releases" target="_blank" rel="noopener">Открыть Releases '+EXT+'</a></div>';
   var h=relBlock(rel[0]);
   if(rel.length>1){
     h+='<details class="older"><summary>Прошлые версии ('+(rel.length-1)+')</summary>'+
       rel.slice(1).map(relBlock).join('')+'</details>';
   }
-  h+='<a class="btn btn-sec wide" href="https://github.com/'+USER+'/'+esc(r.name)+'/releases" target="_blank" rel="noopener">Все релизы на GitHub '+EXT+'</a>';
   return h;
 }
 function relBlock(x){
-  var h='<div class="rel"><div class="rel-head"><div class="grow">'+
+  var h='<div class="rel"><div class="rel-head"><div style="flex:1;min-width:0">'+
     '<div class="rel-name">'+esc(x.name)+'</div>'+
     '<div class="meta" title="'+esc(dt(x.date))+'">'+esc(x.tag)+' · '+dtShort(x.date)+'</div></div>'+
     (x.pre?'<span class="badge b-amber">pre-release</span>':'')+'</div>';
@@ -417,91 +526,134 @@ function assetRow(a){
   if(abi==='arm64')hint='<span class="badge b-green">arm64 · для телефона</span>';
   else if(abi==='arm32')hint='<span class="badge b-dim">32-bit</span>';
   else if(abi==='x86')hint='<span class="badge b-dim">эмулятор</span>';
-  return '<div class="row"><div class="grow">'+
+  return '<div class="row"><div style="flex:1;min-width:0">'+
     '<div class="name">'+esc(a.name)+'</div>'+
     '<div class="meta">'+mb(a.size)+' · скачиваний: '+a.dl+'</div>'+hint+'</div>'+
     '<a class="btn '+(pri?'btn-pri':'btn-sec')+'" href="'+esc(a.url)+'">'+DL+'Скачать</a></div>';
 }
-function artPanel(r,art){
+function artSection(r,art){
   if(art==null)return errBlock(r.name);
   if(!art.length)return '<div class="empty"><p>Сборок в Actions пока нет.</p>'+
-    '<a class="btn btn-sec" href="https://github.com/'+USER+'/'+esc(r.name)+'/actions" target="_blank" rel="noopener">Открыть Actions '+EXT+'</a></div>';
+    '<a class="btn btn-sec" href="'+esc(r.url)+'/actions" target="_blank" rel="noopener">Открыть Actions '+EXT+'</a></div>';
   var h='<p class="note">Свежие сборки из GitHub Actions. Внутри ZIP — APK. Скачивается без логина GitHub.</p>';
   h+=art.map(function(a,i){return artRow(r,a,i===0)}).join('');
-  h+='<a class="btn btn-sec wide" href="https://github.com/'+USER+'/'+esc(r.name)+'/actions" target="_blank" rel="noopener">Все запуски на GitHub '+EXT+'</a>';
   return h;
 }
 function artRow(r,a,fresh){
-  var runUrl=a.run?'https://github.com/'+USER+'/'+esc(r.name)+'/actions/runs/'+a.run
-                  :'https://github.com/'+USER+'/'+esc(r.name)+'/actions';
-  var dl=a.run?'https://nightly.link/'+USER+'/'+esc(r.name)+'/actions/runs/'+a.run+'/'+encodeURIComponent(a.name)+'.zip':null;
+  var runUrl=a.run?(esc(r.url)+'/actions/runs/'+a.run):(esc(r.url)+'/actions');
+  var dl=a.run?nightly(r,a):null;
   var btn;
   if(a.expired)btn='<button class="btn btn-sec" type="button" disabled>Истёк</button>';
   else if(dl)btn='<a class="btn '+(fresh?'btn-pri':'btn-sec')+'" href="'+dl+'">'+DL+'Скачать ZIP</a>';
   else btn='<a class="btn btn-sec" href="'+runUrl+'" target="_blank" rel="noopener">Открыть</a>';
   var meta=mb(a.size)+' · '+ago(a.date)+(a.branch?' · '+esc(a.branch)+'@'+esc(a.sha):'');
-  return '<div class="row'+(a.expired?' dim':'')+'"><div class="grow">'+
+  return '<div class="row'+(a.expired?' dim':'')+'"><div style="flex:1;min-width:0">'+
     '<div class="name">'+esc(a.name)+(fresh&&!a.expired?' <span class="badge b-green">последняя</span>':'')+'</div>'+
     '<div class="meta" title="'+esc(dt(a.date))+'">'+meta+'</div></div>'+
     '<div class="actions">'+btn+
     '<a class="icon-btn" href="'+runUrl+'" target="_blank" rel="noopener" aria-label="Открыть запуск на GitHub" title="Запуск на GitHub">'+EXT+'</a></div></div>';
 }
 
-/* ---------- events ---------- */
-function switchTab(btn){
-  var card=btn.closest('.card');
-  var repo=btn.getAttribute('data-repo'),kind=btn.getAttribute('data-tab');
-  card.querySelectorAll('.tab').forEach(function(b){
-    b.setAttribute('aria-selected',b===btn?'true':'false');
-  });
-  card.querySelectorAll('.panel').forEach(function(p){
-    p.hidden=p.id!=='p-'+kind+'-'+repo;
+/* ---------- readme ---------- */
+function readmeHTML(r){
+  if(readmeCache[r.name]!==undefined)return renderReadme(readmeCache[r.name],r);
+  return '<div class="rm-load shimmer" style="width:65%"></div>'+
+    '<div class="rm-load shimmer"></div><div class="rm-load shimmer" style="width:80%"></div>';
+}
+function fetchReadme(r){
+  fetch(API+'/repos/'+USER+'/'+r.name+'/readme',{headers:{'Accept':'application/vnd.github.html'}})
+  .then(function(res){
+    if(res.status===404){var e=new Error('none');e.none=true;throw e}
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    return res.text();
+  })
+  .then(function(html){
+    readmeCache[r.name]=html;saveReadme();
+    if(currentApp()===r.name){var box=document.getElementById('readmeBox');if(box)box.innerHTML=renderReadme(html,r)}
+  })
+  .catch(function(e){
+    if(currentApp()!==r.name)return;
+    var box=document.getElementById('readmeBox');if(!box)return;
+    if(e&&e.none){
+      box.innerHTML='<p class="note">README в репозитории нет.'+(r.desc?' Краткое описание: '+esc(r.desc):'')+'</p>';
+    }else{
+      box.innerHTML='<div class="empty"><p class="err">README не загрузился.</p>'+
+        '<button class="btn btn-sec" type="button" data-readme="'+esc(r.name)+'">Повторить</button></div>';
+    }
   });
 }
+function renderReadme(html,r){
+  var doc=new DOMParser().parseFromString(html,'text/html');
+  ['script','style','iframe','object','embed','form','link','meta','input','button'].forEach(function(t){
+    doc.querySelectorAll(t).forEach(function(n){n.remove()});
+  });
+  var branch=r.branch||'main';
+  var rawBase='https://raw.githubusercontent.com/'+USER+'/'+encodeURIComponent(r.name)+'/'+encodeURIComponent(branch)+'/';
+  var blobBase='https://github.com/'+USER+'/'+encodeURIComponent(r.name)+'/blob/'+encodeURIComponent(branch)+'/';
+  var fix=function(u){return String(u||'').replace(/^\.\//,'').replace(/^\//,'')};
+  doc.querySelectorAll('img').forEach(function(img){
+    var s=img.getAttribute('src')||'';
+    if(s&&!/^(https?:|data:)/i.test(s))img.setAttribute('src',rawBase+fix(s));
+    img.setAttribute('loading','lazy');
+  });
+  doc.querySelectorAll('a').forEach(function(a){
+    var h=a.getAttribute('href')||'';
+    if(h&&!/^(https?:|mailto:|#)/i.test(h))a.setAttribute('href',blobBase+fix(h));
+    a.setAttribute('target','_blank');a.setAttribute('rel','noopener');
+  });
+  doc.querySelectorAll('*').forEach(function(el){
+    Array.prototype.slice.call(el.attributes).forEach(function(at){
+      var n=at.name.toLowerCase();
+      if(n.slice(0,2)==='on')el.removeAttribute(at.name);
+      else if((n==='href'||n==='src')&&/^\s*(javascript|vbscript|data):/i.test(at.value)&&n!=='src')el.removeAttribute(at.name);
+      else if(n==='src'&&/^\s*(javascript|vbscript):/i.test(at.value))el.removeAttribute(at.name);
+    });
+  });
+  return doc.body.innerHTML;
+}
+
+/* ---------- events ---------- */
 document.addEventListener('click',function(ev){
   if(!(ev.target instanceof Element))return;
-  var t=ev.target.closest('[data-tab]');
-  if(t){switchTab(t);return}
+  if(ev.target.closest('[data-back]')){
+    if(window.history.length>1)window.history.back();else location.hash='#/';
+    return;
+  }
   var rt=ev.target.closest('[data-retry]');
   if(rt){retryRepo(rt.getAttribute('data-retry'));return}
+  var rm=ev.target.closest('[data-readme]');
+  if(rm){var r=findRepo(rm.getAttribute('data-readme'));if(r)fetchReadme(r);return}
   if(ev.target.closest('[data-reload]')){load(true)}
-});
-document.addEventListener('keydown',function(ev){
-  if(ev.key!=='ArrowLeft'&&ev.key!=='ArrowRight')return;
-  if(!(ev.target instanceof Element))return;
-  var t=ev.target.closest('.tab');if(!t)return;
-  var tabs=Array.prototype.slice.call(t.closest('.tabs').querySelectorAll('.tab'));
-  var i=tabs.indexOf(t);
-  var n=tabs[(i+(ev.key==='ArrowRight'?1:tabs.length-1))%tabs.length];
-  n.focus();switchTab(n);ev.preventDefault();
 });
 refreshBtn.addEventListener('click',function(){load(true)});
 forksBtn.addEventListener('click',function(){
   state.showForks=!state.showForks;
   forksBtn.setAttribute('aria-pressed',state.showForks?'true':'false');
-  render();
+  if(!currentApp())renderHome();
 });
-searchEl.addEventListener('input',render);
+searchEl.addEventListener('input',function(){if(!currentApp())renderHome()});
+window.addEventListener('hashchange',route);
 
 /* ---------- PWA: установка ---------- */
 var deferredPrompt=null;
+var installReady=false;
 var standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 window.addEventListener('beforeinstallprompt',function(e){
   e.preventDefault();
   if(standalone)return;
-  deferredPrompt=e;
-  installBtn.hidden=false;
+  deferredPrompt=e;installReady=true;
+  if(!currentApp())installBtn.hidden=false;
 });
 installBtn.addEventListener('click',function(){
   if(!deferredPrompt)return;
   installBtn.disabled=true;
   deferredPrompt.prompt();
   deferredPrompt.userChoice.then(function(){
-    deferredPrompt=null;installBtn.hidden=true;installBtn.disabled=false;
+    deferredPrompt=null;installReady=false;installBtn.hidden=true;installBtn.disabled=false;
   }).catch(function(){installBtn.disabled=false});
 });
 window.addEventListener('appinstalled',function(){
-  deferredPrompt=null;installBtn.hidden=true;standalone=true;
+  deferredPrompt=null;installReady=false;installBtn.hidden=true;standalone=true;
 });
 
 /* ---------- PWA: сервис-воркер ---------- */
